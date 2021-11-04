@@ -7,6 +7,7 @@ import android.graphics.Matrix
 import android.graphics.PointF
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.util.AttributeSet
 import android.view.*
 import android.view.GestureDetector.SimpleOnGestureListener
@@ -192,7 +193,11 @@ class PhotoView @JvmOverloads constructor(
     override fun setImageResource(resId: Int) {
         var drawable: Drawable? = null
         try {
-            drawable = resources.getDrawable(resId, null)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable = resources.getDrawable(resId, null)
+            } else {
+                drawable = resources.getDrawable(resId)
+            }
         } catch (e: Exception) {
         }
         setImageDrawable(drawable)

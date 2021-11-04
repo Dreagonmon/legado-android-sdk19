@@ -31,7 +31,6 @@ import io.legado.app.ui.association.ImportBookSourceDialog
 import io.legado.app.ui.book.source.debug.BookSourceDebugActivity
 import io.legado.app.ui.book.source.edit.BookSourceEditActivity
 import io.legado.app.ui.document.HandleFileContract
-import io.legado.app.ui.qrcode.QrCodeResult
 import io.legado.app.ui.widget.SelectActionBar
 import io.legado.app.ui.widget.dialog.TextDialog
 import io.legado.app.ui.widget.recycler.DragSelectTouchHelper
@@ -60,10 +59,6 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
     private var sort = Sort.Default
     private var sortAscending = true
     private var snackBar: Snackbar? = null
-    private val qrResult = registerForActivityResult(QrCodeResult()) {
-        it ?: return@registerForActivityResult
-        showDialogFragment(ImportBookSourceDialog(it))
-    }
     private val importDoc = registerForActivityResult(HandleFileContract()) {
         it.uri?.let { uri ->
             try {
@@ -120,7 +115,6 @@ class BookSourceActivity : VMBaseActivity<ActivityBookSourceBinding, BookSourceV
     override fun onCompatOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_add_book_source -> startActivity<BookSourceEditActivity>()
-            R.id.menu_import_qr -> qrResult.launch(null)
             R.id.menu_share_source -> viewModel.shareSelection(adapter.selection) {
                 startActivity(Intent.createChooser(it, getString(R.string.share_selected_source)))
             }

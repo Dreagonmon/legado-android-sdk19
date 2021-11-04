@@ -132,6 +132,7 @@ object DocumentUtils {
                     } while (cursor.moveToNext())
                 }
             }
+        } catch (e: Exception){
         } finally {
             cursor?.close()
         }

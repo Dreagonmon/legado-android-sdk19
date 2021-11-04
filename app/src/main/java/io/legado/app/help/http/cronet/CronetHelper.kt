@@ -48,13 +48,15 @@ val cronetEngine: ExperimentalCronetEngine? by lazy {
 }
 
 fun buildRequest(request: Request, callback: UrlRequest.Callback): UrlRequest? {
-    val url = request.url.toString()
-    val headers: Headers = request.headers
-    val requestBody = request.body
+    val url = request.url().toString()
+    val headers: Headers = request.headers()
+    val requestBody = request.body()
     return cronetEngine?.newUrlRequestBuilder(url, callback, executor)?.apply {
-        setHttpMethod(request.method)//设置
+        setHttpMethod(request.method())//设置
         allowDirectExecutor()
-        headers.forEachIndexed { index, _ ->
+        headers.names()
+        var index = 0
+        while (index < headers.size()) {
             addHeader(headers.name(index), headers.value(index))
         }
         if (requestBody != null) {

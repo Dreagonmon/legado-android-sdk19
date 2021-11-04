@@ -179,7 +179,11 @@ object CronetLoader : CronetEngine.Builder.LibraryLoader() {
             Timber.e(e)
         }
         if (TextUtils.isEmpty(cpuAbi)) {
-            cpuAbi = Build.SUPPORTED_ABIS[0]
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                cpuAbi = Build.SUPPORTED_ABIS[0]
+            } else {
+                cpuAbi = Build.CPU_ABI;
+            }
         }
         return cpuAbi
     }

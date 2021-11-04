@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.upstream.DataSink;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -617,10 +616,10 @@ public final class OkhttpCacheDataSource implements DataSource {
                 bytesRemaining = ContentMetadata.getContentLength(cache.getContentMetadata(key));
                 if (bytesRemaining != C.LENGTH_UNSET) {
                     bytesRemaining -= dataSpec.position;
-                    if (bytesRemaining < 0) {
-                        throw new DataSourceException(
-                                PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE);
-                    }
+//                    if (bytesRemaining < 0) {
+//                        throw new DataSourceException(
+//                                PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE);
+//                    }
                 }
             }
             if (dataSpec.length != C.LENGTH_UNSET) {

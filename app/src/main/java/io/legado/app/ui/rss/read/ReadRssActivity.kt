@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.webkit.*
@@ -115,7 +116,9 @@ class ReadRssActivity : VMBaseActivity<ActivityRssReadBinding, ReadRssViewModel>
         binding.webView.webChromeClient = CustomWebChromeClient()
         binding.webView.webViewClient = CustomWebViewClient()
         binding.webView.settings.apply {
-            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+            }
             domStorageEnabled = true
             allowContentAccess = true
         }

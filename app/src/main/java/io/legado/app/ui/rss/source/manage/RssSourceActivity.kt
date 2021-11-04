@@ -23,7 +23,6 @@ import io.legado.app.lib.theme.primaryColor
 import io.legado.app.lib.theme.primaryTextColor
 import io.legado.app.ui.association.ImportRssSourceDialog
 import io.legado.app.ui.document.HandleFileContract
-import io.legado.app.ui.qrcode.QrCodeResult
 import io.legado.app.ui.rss.source.edit.RssSourceEditActivity
 import io.legado.app.ui.widget.SelectActionBar
 import io.legado.app.ui.widget.dialog.TextDialog
@@ -51,12 +50,6 @@ class RssSourceActivity : VMBaseActivity<ActivityRssSourceBinding, RssSourceView
     private var sourceFlowJob: Job? = null
     private var groups = hashSetOf<String>()
     private var groupMenu: SubMenu? = null
-    private val qrCodeResult = registerForActivityResult(QrCodeResult()) {
-        it ?: return@registerForActivityResult
-        showDialogFragment(
-            ImportRssSourceDialog(it)
-        )
-    }
     private val importDoc = registerForActivityResult(HandleFileContract()) {
         kotlin.runCatching {
             it.uri?.readText(this)?.let {
@@ -115,7 +108,6 @@ class RssSourceActivity : VMBaseActivity<ActivityRssSourceBinding, RssSourceView
                 allowExtensions = arrayOf("txt", "json")
             }
             R.id.menu_import_onLine -> showImportDialog()
-            R.id.menu_import_qr -> qrCodeResult.launch(null)
             R.id.menu_group_manage -> showDialogFragment<GroupManageDialog>()
             R.id.menu_share_source -> viewModel.shareSelection(adapter.selection) {
                 startActivity(Intent.createChooser(it, getString(R.string.share_selected_source)))

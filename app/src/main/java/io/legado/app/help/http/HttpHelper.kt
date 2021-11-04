@@ -82,7 +82,7 @@ fun getProxyClient(proxy: String? = null): OkHttpClient {
         if (username != "" && password != "") {
             builder.proxyAuthenticator { _, response -> //设置代理服务器账号密码
                 val credential: String = Credentials.basic(username, password)
-                response.request.newBuilder()
+                response.request().newBuilder()
                     .header("Proxy-Authorization", credential)
                     .build()
             }

@@ -4,9 +4,6 @@ import io.legado.app.help.http.newCallResponseBody
 import io.legado.app.help.http.okHttpClient
 import io.legado.app.help.http.text
 import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.asRequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.intellij.lang.annotations.Language
 import org.jsoup.Jsoup
 import timber.log.Timber
@@ -98,7 +95,8 @@ class WebDav(urlStr: String) {
                     addHeader("Depth", "1")
                     // 添加RequestBody对象，可以只返回的属性。如果设为null，则会返回全部属性
                     // 注意：尽量手动指定需要返回的属性。若返回全部属性，可能后由于Prop.java里没有该属性名，而崩溃。
-                    val requestBody = requestPropsStr.toRequestBody("text/plain".toMediaType())
+//                    val requestBody = requestPropsStr.toRequestBody("text/plain".toMediaType())
+                    val requestBody = RequestBody.create(MediaType.parse("text/plain"), requestPropsStr)
                     method("PROPFIND", requestBody)
                 }.text()
             }.onFailure { e ->
@@ -193,7 +191,8 @@ class WebDav(urlStr: String) {
         val file = File(localPath)
         if (!file.exists()) return false
         // 务必注意RequestBody不要嵌套，不然上传时内容可能会被追加多余的文件信息
-        val fileBody = file.asRequestBody(contentType.toMediaType())
+//        val fileBody = file.asRequestBody(contentType.toMediaType())
+        val fileBody = RequestBody.create(MediaType.parse(contentType), file)
         val url = httpUrl
         val auth = HttpAuth.auth
         if (url != null && auth != null) {
@@ -210,7 +209,8 @@ class WebDav(urlStr: String) {
 
     suspend fun upload(byteArray: ByteArray, contentType: String): Boolean {
         // 务必注意RequestBody不要嵌套，不然上传时内容可能会被追加多余的文件信息
-        val fileBody = byteArray.toRequestBody(contentType.toMediaType())
+//        val fileBody = byteArray.toRequestBody(contentType.toMediaType())
+        val fileBody = RequestBody.create(MediaType.parse(contentType), byteArray)
         val url = httpUrl
         val auth = HttpAuth.auth
         if (url != null && auth != null) {

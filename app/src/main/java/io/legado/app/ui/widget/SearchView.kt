@@ -6,6 +6,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
@@ -37,7 +38,11 @@ class SearchView @JvmOverloads constructor(
         try {
             if (textView == null) {
                 textView = findViewById(androidx.appcompat.R.id.search_src_text)
-                mSearchHintIcon = this.context.getDrawable(R.drawable.ic_search_hint)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mSearchHintIcon = this.context.getDrawable(R.drawable.ic_search_hint)
+                } else {
+                    mSearchHintIcon = this.context.resources.getDrawable(R.drawable.ic_search_hint)
+                }
                 updateQueryHint()
             }
             // 改变字体

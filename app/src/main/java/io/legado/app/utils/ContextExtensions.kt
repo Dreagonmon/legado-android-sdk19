@@ -196,27 +196,7 @@ fun Context.shareWithQr(
     title: String = getString(R.string.share),
     errorCorrectionLevel: ErrorCorrectionLevel = ErrorCorrectionLevel.H
 ) {
-    val bitmap = QRCodeUtils.createQRCode(text, errorCorrectionLevel = errorCorrectionLevel)
-    if (bitmap == null) {
-        toastOnUi(R.string.text_too_long_qr_error)
-    } else {
-        try {
-            val file = File(externalCacheDir, "qr.png")
-            val fOut = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut)
-            fOut.flush()
-            fOut.close()
-            file.setReadable(true, false)
-            val contentUri = FileProvider.getUriForFile(this, AppConst.authority, file)
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            intent.putExtra(Intent.EXTRA_STREAM, contentUri)
-            intent.type = "image/png"
-            startActivity(Intent.createChooser(intent, title))
-        } catch (e: Exception) {
-            toastOnUi(e.localizedMessage ?: "ERROR")
-        }
-    }
+    toastOnUi(R.string.text_too_long_qr_error)
 }
 
 fun Context.sendToClip(text: String) {

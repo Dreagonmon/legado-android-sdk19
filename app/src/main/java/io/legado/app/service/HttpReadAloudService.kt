@@ -142,14 +142,14 @@ class HttpReadAloudService : BaseReadAloudService(),
                         httpTts.contentType?.takeIf { ct ->
                             ct.isNotBlank()
                         }?.let { ct ->
-                            response.headers["Content-Type"]?.let { contentType ->
+                            response.headers()["Content-Type"]?.let { contentType ->
                                 if (!contentType.matches(ct.toRegex())) {
-                                    throw NoStackTraceException(response.body!!.string())
+                                    throw NoStackTraceException(response.body()!!.string())
                                 }
                             }
                         }
                         ensureActive()
-                        response.body!!.bytes().let { bytes ->
+                        response.body()!!.bytes().let { bytes ->
                             ensureActive()
                             val file = createSpeakFileAsMd5IfNotExist(fileName)
                             file.writeBytes(bytes)

@@ -43,10 +43,10 @@ class StrResponse {
     fun raw() = raw
 
     fun url(): String {
-        raw.networkResponse?.let {
-            return it.request.url.toString()
+        raw.networkResponse()?.let {
+            return it.request().url().toString()
         }
-        return raw.request.url.toString()
+        return raw.request().url().toString()
     }
 
     val url: String get() = url()
@@ -54,15 +54,15 @@ class StrResponse {
     fun body() = body
 
     fun code(): Int {
-        return raw.code
+        return raw.code()
     }
 
     fun message(): String {
-        return raw.message
+        return raw.message()
     }
 
     fun headers(): Headers {
-        return raw.headers
+        return raw.headers()
     }
 
     fun isSuccessful(): Boolean = raw.isSuccessful

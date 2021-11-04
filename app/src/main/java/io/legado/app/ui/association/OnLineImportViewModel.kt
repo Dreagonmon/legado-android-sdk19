@@ -17,7 +17,7 @@ import io.legado.app.utils.GSON
 import io.legado.app.utils.fromJsonArray
 import io.legado.app.utils.fromJsonObject
 import io.legado.app.utils.isJsonArray
-import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType
 
 class OnLineImportViewModel(app: Application) : BaseViewModel(app) {
     val successLive = MutableLiveData<Pair<String, String>>()
@@ -144,8 +144,10 @@ class OnLineImportViewModel(app: Application) : BaseViewModel(app) {
                 url(url)
             }
             when (rs.contentType()) {
-                "application/zip".toMediaType(),
-                "application/octet-stream".toMediaType() -> {
+//                "application/zip".toMediaType(),
+                MediaType.parse("application/zip"),
+//                "application/octet-stream".toMediaType() -> {
+                MediaType.parse("application/octet-stream") -> {
                     @Suppress("BlockingMethodInNonBlockingContext")
                     importReadConfig(rs.bytes(), finally)
                 }

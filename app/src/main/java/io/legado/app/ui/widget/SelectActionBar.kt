@@ -1,6 +1,7 @@
 package io.legado.app.ui.widget
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.Menu
@@ -28,8 +29,10 @@ class SelectActionBar @JvmOverloads constructor(
 
     init {
         setBackgroundColor(context.bottomBackground)
-        elevation =
-            if (AppConfig.elevation < 0) context.elevation else AppConfig.elevation.toFloat()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            elevation =
+                if (AppConfig.elevation < 0) context.elevation else AppConfig.elevation.toFloat()
+        }
         val textIsDark = ColorUtils.isColorLight(context.bottomBackground)
         val primaryTextColor = context.getPrimaryTextColor(textIsDark)
         val secondaryTextColor = context.getSecondaryTextColor(textIsDark)

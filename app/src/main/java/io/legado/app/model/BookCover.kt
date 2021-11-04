@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.request.RequestOptions
 import io.legado.app.R
@@ -45,12 +46,22 @@ object BookCover {
         val key = if (isNightTheme) PreferKey.defaultCoverDark else PreferKey.defaultCover
         val path = appCtx.getPrefString(key)
         if (path.isNullOrBlank()) {
-            defaultDrawable = appCtx.resources.getDrawable(R.drawable.image_cover_default, null)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                defaultDrawable = appCtx.resources.getDrawable(R.drawable.image_cover_default, null)
+            } else {
+                defaultDrawable = appCtx.resources.getDrawable(R.drawable.image_cover_default)
+            }
             return
         }
-        defaultDrawable = kotlin.runCatching {
-            BitmapDrawable(appCtx.resources, BitmapUtils.decodeBitmap(path, 600, 900))
-        }.getOrDefault(appCtx.resources.getDrawable(R.drawable.image_cover_default, null))
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            defaultDrawable = kotlin.runCatching {
+                BitmapDrawable(appCtx.resources, BitmapUtils.decodeBitmap(path, 600, 900))
+            }.getOrDefault(appCtx.resources.getDrawable(R.drawable.image_cover_default, null))
+        } else {
+            defaultDrawable = kotlin.runCatching {
+                BitmapDrawable(appCtx.resources, BitmapUtils.decodeBitmap(path, 600, 900))
+            }.getOrDefault(appCtx.resources.getDrawable(R.drawable.image_cover_default))
+        }
     }
 
     fun getBlurDefaultCover(context: Context): RequestBuilder<Drawable> {

@@ -21,7 +21,6 @@ import io.legado.app.lib.dialogs.alert
 import io.legado.app.lib.dialogs.selector
 import io.legado.app.lib.theme.primaryColor
 import io.legado.app.ui.login.SourceLoginActivity
-import io.legado.app.ui.qrcode.QrCodeResult
 import io.legado.app.ui.rss.source.debug.RssSourceDebugActivity
 import io.legado.app.ui.widget.KeyboardToolPop
 import io.legado.app.ui.widget.dialog.TextDialog
@@ -40,13 +39,6 @@ class RssSourceEditActivity :
     private var mIsSoftKeyBoardShowing = false
     private val adapter by lazy { RssSourceEditAdapter() }
     private val sourceEntities: ArrayList<EditEntity> = ArrayList()
-    private val qrCodeResult = registerForActivityResult(QrCodeResult()) {
-        it?.let {
-            viewModel.importSource(it) { source: RssSource ->
-                upRecyclerView(source)
-            }
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         initView()
@@ -125,7 +117,6 @@ class RssSourceEditActivity :
                 }
             }
             R.id.menu_copy_source -> sendToClip(GSON.toJson(getRssSource()))
-            R.id.menu_qr_code_camera -> qrCodeResult.launch(null)
             R.id.menu_paste_source -> viewModel.pasteSource { upRecyclerView(it) }
             R.id.menu_share_str -> share(GSON.toJson(getRssSource()))
             R.id.menu_share_qr -> shareWithQr(

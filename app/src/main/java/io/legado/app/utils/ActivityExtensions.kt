@@ -66,14 +66,16 @@ fun Activity.setStatusBarColorAuto(
     fullScreen: Boolean
 ) {
     val isLightBar = ColorUtils.isColorLight(color)
-    if (fullScreen) {
-        if (isTransparent) {
-            window.statusBarColor = Color.TRANSPARENT
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (fullScreen) {
+            if (isTransparent) {
+                window.statusBarColor = Color.TRANSPARENT
+            } else {
+                window.statusBarColor = getCompatColor(R.color.status_bar_bag)
+            }
         } else {
-            window.statusBarColor = getCompatColor(R.color.status_bar_bag)
+            window.statusBarColor = color
         }
-    } else {
-        window.statusBarColor = color
     }
     setLightStatusBar(isLightBar)
 }
@@ -113,7 +115,9 @@ fun Activity.setLightStatusBar(isLightBar: Boolean) {
  */
 fun Activity.setNavigationBarColorAuto(@ColorInt color: Int) {
     val isLightBor = ColorUtils.isColorLight(color)
-    window.navigationBarColor = color
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        window.navigationBarColor = color
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         window.insetsController?.let {
             if (isLightBor) {

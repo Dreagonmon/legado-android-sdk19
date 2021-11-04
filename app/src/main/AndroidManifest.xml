@@ -182,10 +182,6 @@
         <activity
             android:name="io.legado.app.lib.permission.PermissionActivity"
             android:theme="@style/Activity.Permission" />
-        <!-- 二维码扫描 -->
-        <activity
-            android:name=".ui.qrcode.QrCodeActivity"
-            android:launchMode="singleTask" />
         <!-- 规则订阅 -->
         <activity
             android:name=".ui.rss.subscription.RuleSubActivity"

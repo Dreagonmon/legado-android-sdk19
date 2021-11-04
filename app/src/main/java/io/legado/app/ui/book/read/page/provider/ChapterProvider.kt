@@ -562,13 +562,17 @@ object ChapterProvider {
         //标题
         val tPaint = TextPaint()
         tPaint.color = ReadBookConfig.textColor
-        tPaint.letterSpacing = ReadBookConfig.letterSpacing
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            tPaint.letterSpacing = ReadBookConfig.letterSpacing
+        }
         tPaint.typeface = titleFont
         tPaint.textSize = with(ReadBookConfig) { textSize + titleSize }.sp.toFloat()
         tPaint.isAntiAlias = true
         val cPaint = TextPaint()
         cPaint.color = ReadBookConfig.textColor
-        cPaint.letterSpacing = ReadBookConfig.letterSpacing
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cPaint.letterSpacing = ReadBookConfig.letterSpacing
+        }
         cPaint.typeface = textFont
         cPaint.textSize = ReadBookConfig.textSize.sp.toFloat()
         cPaint.isAntiAlias = true

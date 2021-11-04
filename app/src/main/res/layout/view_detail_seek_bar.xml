@@ -21,7 +21,6 @@
         android:layout_height="24dp"
         android:contentDescription="@string/reduce"
         android:src="@drawable/ic_remove"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:tint="@color/primaryText" />
 
     <io.legado.app.lib.theme.view.ThemeSeekBar
@@ -38,7 +37,6 @@
         android:layout_height="24dp"
         android:contentDescription="@string/plus"
         android:src="@drawable/ic_add"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:tint="@color/primaryText" />
 
     <TextView

@@ -13,7 +13,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.core.app.NotificationCompat
 import androidx.media.AudioFocusRequestCompat
-import com.google.android.exoplayer2.PlaybackException
+//import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import io.legado.app.R
@@ -245,15 +245,15 @@ class AudioPlayService : BaseService(),
     /**
      * 播放错误事件
      */
-    override fun onPlayerError(error: PlaybackException) {
-        super.onPlayerError(error)
-        AudioPlay.status = Status.STOP
-        postEvent(EventBus.AUDIO_STATE, Status.STOP)
-        val errorMsg = "音频播放出错\n${error.errorCodeName} ${error.errorCode}"
-        AppLog.put(errorMsg, error)
-        toastOnUi(errorMsg)
-        Timber.e(error)
-    }
+//    override fun onPlayerError(error: PlaybackException) {
+//        super.onPlayerError(error)
+//        AudioPlay.status = Status.STOP
+//        postEvent(EventBus.AUDIO_STATE, Status.STOP)
+//        val errorMsg = "音频播放出错\n${error.errorCodeName} ${error.errorCode}"
+//        AppLog.put(errorMsg, error)
+//        toastOnUi(errorMsg)
+//        Timber.e(error)
+//    }
 
     private fun setTimer(minute: Int) {
         timeMinute = minute

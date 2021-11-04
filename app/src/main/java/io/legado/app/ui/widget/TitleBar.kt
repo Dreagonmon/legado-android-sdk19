@@ -3,6 +3,7 @@ package io.legado.app.ui.widget
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Menu
 import android.view.View
@@ -154,11 +155,15 @@ class TitleBar @JvmOverloads constructor(
 
             setBackgroundColor(context.primaryColor)
 
-            stateListAnimator = null
-            elevation = if (AppConfig.elevation < 0) {
-                context.elevation
-            } else {
-                AppConfig.elevation.toFloat()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                stateListAnimator = null
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                elevation = if (AppConfig.elevation < 0) {
+                    context.elevation
+                } else {
+                    AppConfig.elevation.toFloat()
+                }
             }
         }
         a.recycle()
@@ -198,7 +203,9 @@ class TitleBar @JvmOverloads constructor(
     }
 
     fun transparent() {
-        elevation = 0f
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            elevation = 0f
+        }
         setBackgroundColor(Color.TRANSPARENT)
     }
 

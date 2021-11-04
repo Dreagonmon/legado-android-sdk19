@@ -27,7 +27,6 @@ import io.legado.app.lib.theme.primaryColor
 import io.legado.app.ui.book.source.debug.BookSourceDebugActivity
 import io.legado.app.ui.document.HandleFileContract
 import io.legado.app.ui.login.SourceLoginActivity
-import io.legado.app.ui.qrcode.QrCodeResult
 import io.legado.app.ui.widget.KeyboardToolPop
 import io.legado.app.ui.widget.dialog.TextDialog
 import io.legado.app.utils.*
@@ -48,12 +47,6 @@ class BookSourceEditActivity :
     private val infoEntities: ArrayList<EditEntity> = ArrayList()
     private val tocEntities: ArrayList<EditEntity> = ArrayList()
     private val contentEntities: ArrayList<EditEntity> = ArrayList()
-    private val qrCodeResult = registerForActivityResult(QrCodeResult()) {
-        it ?: return@registerForActivityResult
-        viewModel.importSource(it) { source ->
-            upRecyclerView(source)
-        }
-    }
     private val selectDoc = registerForActivityResult(HandleFileContract()) {
         it.uri?.let { uri ->
             if (uri.isContentScheme()) {
@@ -112,7 +105,6 @@ class BookSourceEditActivity :
             }
             R.id.menu_copy_source -> sendToClip(GSON.toJson(getSource()))
             R.id.menu_paste_source -> viewModel.pasteSource { upRecyclerView(it) }
-            R.id.menu_qr_code_camera -> qrCodeResult.launch(null)
             R.id.menu_share_str -> share(GSON.toJson(getSource()))
             R.id.menu_share_qr -> shareWithQr(
                 GSON.toJson(getSource()),

@@ -5,7 +5,8 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.RippleDrawable
+//import android.graphics.drawable.RippleDrawable
+import android.os.Build
 import android.view.View
 import android.widget.*
 import androidx.annotation.CheckResult
@@ -67,10 +68,10 @@ object TintHelper {
         when (view) {
             is Button -> {
                 sl = getDisabledColorStateList(color, disabled)
-                if (view.getBackground() is RippleDrawable) {
-                    val rd = view.getBackground() as RippleDrawable
-                    rd.setColor(ColorStateList.valueOf(rippleColor))
-                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && view.getBackground() is RippleDrawable) {
+//                    val rd = view.getBackground() as RippleDrawable
+//                    rd.setColor(ColorStateList.valueOf(rippleColor))
+//                }
                 // Disabled text color state for buttons, may get overridden later by ATE tags
                 view.setTextColor(
                     getDisabledColorStateList(
@@ -165,24 +166,24 @@ object TintHelper {
                 }
                 else -> isBg = true
             }
-            if (!isBg && view.background is RippleDrawable) {
-                // Ripples for the above views (e.g. when you tap and hold a switch or checkbox)
-                val rd = view.background as RippleDrawable
-                @SuppressLint("PrivateResource") val unchecked = ContextCompat.getColor(
-                    view.context,
-                    if (isDark) R.color.ripple_material_dark else R.color.ripple_material_light
-                )
-                val checked = ColorUtils.adjustAlpha(color, 0.4f)
-                val sl = ColorStateList(
-                    arrayOf(
-                        intArrayOf(-android.R.attr.state_activated, -android.R.attr.state_checked),
-                        intArrayOf(android.R.attr.state_activated),
-                        intArrayOf(android.R.attr.state_checked)
-                    ),
-                    intArrayOf(unchecked, checked, checked)
-                )
-                rd.setColor(sl)
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !isBg && view.background is RippleDrawable) {
+//                // Ripples for the above views (e.g. when you tap and hold a switch or checkbox)
+//                val rd = view.background as RippleDrawable
+//                @SuppressLint("PrivateResource") val unchecked = ContextCompat.getColor(
+//                    view.context,
+//                    if (isDark) R.color.ripple_material_dark else R.color.ripple_material_light
+//                )
+//                val checked = ColorUtils.adjustAlpha(color, 0.4f)
+//                val sl = ColorStateList(
+//                    arrayOf(
+//                        intArrayOf(-android.R.attr.state_activated, -android.R.attr.state_checked),
+//                        intArrayOf(android.R.attr.state_activated),
+//                        intArrayOf(android.R.attr.state_checked)
+//                    ),
+//                    intArrayOf(unchecked, checked, checked)
+//                )
+//                rd.setColor(sl)
+//            }
         }
         if (isBg) {
             // Need to tint the isBackground of a view
@@ -220,7 +221,9 @@ object TintHelper {
                 color
             )
         )
-        radioButton.buttonTintList = sl
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            radioButton.buttonTintList = sl
+        }
     }
 
     fun setTint(seekBar: SeekBar, @ColorInt color: Int, useDarker: Boolean) {
@@ -231,8 +234,10 @@ object TintHelper {
                 if (useDarker) R.color.ate_control_disabled_dark else R.color.ate_control_disabled_light
             )
         )
-        seekBar.thumbTintList = s1
-        seekBar.progressTintList = s1
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            seekBar.thumbTintList = s1
+            seekBar.progressTintList = s1
+        }
     }
 
     @JvmOverloads
@@ -240,11 +245,13 @@ object TintHelper {
         progressBar: ProgressBar, @ColorInt color: Int,
         skipIndeterminate: Boolean = false
     ) {
-        val sl = ColorStateList.valueOf(color)
-        progressBar.progressTintList = sl
-        progressBar.secondaryProgressTintList = sl
-        if (!skipIndeterminate)
-            progressBar.indeterminateTintList = sl
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val sl = ColorStateList.valueOf(color)
+            progressBar.progressTintList = sl
+            progressBar.secondaryProgressTintList = sl
+            if (!skipIndeterminate)
+                progressBar.indeterminateTintList = sl
+        }
     }
 
 
@@ -296,7 +303,9 @@ object TintHelper {
                 color
             )
         )
-        box.buttonTintList = sl
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            box.buttonTintList = sl
+        }
     }
 
     fun setTint(image: ImageView, @ColorInt color: Int) {

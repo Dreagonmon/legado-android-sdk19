@@ -4,8 +4,6 @@ import android.os.ConditionVariable
 import io.legado.app.help.http.okHttpClient
 import okhttp3.*
 import okhttp3.EventListener
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.ResponseBody.Companion.asResponseBody
 import okio.Buffer
 import org.chromium.net.CronetException
 import org.chromium.net.UrlRequest
@@ -61,11 +59,11 @@ class CronetRequestCallback @JvmOverloads internal constructor(
         }
         followCount += 1
         val client = okHttpClient
-        if (originalRequest.url.isHttps && newLocationUrl.startsWith("http://") && client.followSslRedirects) {
+        if (originalRequest.url().isHttps && newLocationUrl.startsWith("http://") && client.followSslRedirects()) {
             request.followRedirect()
-        } else if (!originalRequest.url.isHttps && newLocationUrl.startsWith("https://") && client.followSslRedirects) {
+        } else if (!originalRequest.url().isHttps && newLocationUrl.startsWith("https://") && client.followSslRedirects()) {
             request.followRedirect()
-        } else if (client.followRedirects) {
+        } else if (client.followRedirects()) {
             request.followRedirect()
         } else {
             request.cancel()
@@ -116,10 +114,13 @@ class CronetRequestCallback @JvmOverloads internal constructor(
 
     override fun onSucceeded(request: UrlRequest, info: UrlResponseInfo) {
         eventListener?.responseBodyEnd(mCall, info.receivedByteCount)
-        val contentType: MediaType? = (this.mResponse.header("content-type")
-            ?: "text/plain; charset=\"utf-8\"").toMediaTypeOrNull()
-        val responseBody: ResponseBody =
-            mBuffer.asResponseBody(contentType)
+//        val contentType: MediaType? = (this.mResponse.header("content-type")
+//            ?: "text/plain; charset=\"utf-8\"").toMediaTypeOrNull()
+//        val responseBody: ResponseBody =
+//            mBuffer.asResponseBody(contentType)
+        val contentType = MediaType.parse(this.mResponse.header("content-type")
+            ?: "text/plain; charset=\"utf-8\"")
+        val responseBody: ResponseBody = ResponseBody.create(contentType, mBuffer.readByteArray())
         val newRequest = originalRequest.newBuilder().url(info.url).build()
         this.mResponse = this.mResponse.newBuilder().body(responseBody).request(newRequest).build()
         mResponseCondition.open()

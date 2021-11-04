@@ -8,9 +8,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import okhttp3.*
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.nio.charset.Charset
 import kotlin.coroutines.resume
@@ -47,10 +44,10 @@ suspend fun OkHttpClient.newCallResponseBody(
         for (i in 0..retry) {
             response = this@newCallResponseBody.newCall(requestBuilder.build()).await()
             if (response.isSuccessful) {
-                return@withContext response.body!!
+                return@withContext response.body()!!
             }
         }
-        return@withContext response!!.body ?: throw IOException(response.message)
+        return@withContext response!!.body() ?: throw IOException(response.message())
     }
 }
 
@@ -66,10 +63,10 @@ suspend fun OkHttpClient.newCallStrResponse(
         for (i in 0..retry) {
             response = this@newCallStrResponse.newCall(requestBuilder.build()).await()
             if (response.isSuccessful) {
-                return@withContext StrResponse(response, response.body!!.text())
+                return@withContext StrResponse(response, response.body()!!.text())
             }
         }
-        return@withContext StrResponse(response!!, response.body?.text() ?: response.message)
+        return@withContext StrResponse(response!!, response.body()?.text() ?: response.message())
     }
 }
 
@@ -120,7 +117,8 @@ fun Request.Builder.addHeaders(headers: Map<String, String>) {
 }
 
 fun Request.Builder.get(url: String, queryMap: Map<String, String>, encoded: Boolean = false) {
-    val httpBuilder = url.toHttpUrl().newBuilder()
+//    val httpBuilder = url.toHttpUrl().newBuilder()
+    val httpBuilder = HttpUrl.parse(url)?.newBuilder()!!
     queryMap.forEach {
         if (encoded) {
             httpBuilder.addEncodedQueryParameter(it.key, it.value)
@@ -146,15 +144,20 @@ fun Request.Builder.postForm(form: Map<String, String>, encoded: Boolean = false
 fun Request.Builder.postMultipart(type: String?, form: Map<String, Any>) {
     val multipartBody = MultipartBody.Builder()
     type?.let {
-        multipartBody.setType(type.toMediaType())
+        multipartBody.setType(MediaType.parse(type))
     }
     form.forEach {
         when (val value = it.value) {
             is Map<*, *> -> {
                 val fileName = value["fileName"] as String
                 val file = value["file"] as ByteArray
-                val mediaType = (value["contentType"] as? String)?.toMediaType()
-                val requestBody = file.toRequestBody(mediaType)
+                val mediaTypeString = value["contentType"] as? String
+                var mediaType = MediaType.parse("text/plain")
+                if (mediaTypeString != null) {
+                    mediaType = MediaType.parse(mediaTypeString)
+                }
+                // val requestBody = file.toRequestBody(mediaType)
+                val requestBody = RequestBody.create(mediaType, file)
                 multipartBody.addFormDataPart(it.key, fileName, requestBody)
             }
             else -> multipartBody.addFormDataPart(it.key, it.value.toString())
@@ -165,7 +168,9 @@ fun Request.Builder.postMultipart(type: String?, form: Map<String, Any>) {
 
 fun Request.Builder.postJson(json: String?) {
     json?.let {
-        val requestBody = json.toRequestBody("application/json; charset=UTF-8".toMediaType())
+//        val requestBody = json.toRequestBody("application/json; charset=UTF-8".toMediaType())
+        val requestBody = RequestBody.create(
+            MediaType.parse("application/json; charset=UTF-8"), json)
         post(requestBody)
     }
 }

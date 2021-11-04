@@ -71,7 +71,9 @@ fun RecyclerView.setEdgeEffectColor(@ColorInt color: Int) {
     edgeEffectFactory = object : RecyclerView.EdgeEffectFactory() {
         override fun createEdgeEffect(view: RecyclerView, direction: Int): EdgeEffect {
             val edgeEffect = super.createEdgeEffect(view, direction)
-            edgeEffect.color = color
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                edgeEffect.color = color
+            }
             return edgeEffect
         }
     }
@@ -84,7 +86,9 @@ fun ViewPager.setEdgeEffectColor(@ColorInt color: Int) {
             val field = clazz.getDeclaredField(name)
             field.isAccessible = true
             val edge = field.get(this)
-            (edge as EdgeEffect).color = color
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                (edge as EdgeEffect).color = color
+            }
         }
     } catch (ignored: Exception) {
     }
